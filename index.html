@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        #item-list li {
+            display: flex;
+            justify-content: space-between
+        }
+    </style>
+
+    <title>Module Pattern TodoList</title>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark bg-dark mb-5">
+        <a class="navbar-brand" href="#">TodoList</a>
+    </nav>
+
+    <!-- Form Card -->
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <input id="todo-title" placeholder="Enter Todo" class="form-control">
+                        </div>
+                        <button class="btn btn-dark add-btn">Add Todo</button>
+
+                        <button class="btn btn-warning update-btn">Update</button>
+
+                        <button class="btn btn-info clear-btn">Clear</button>
+                    </form>
+                </div>
+            </div>
+
+            <ul class="list-group mt-5" id="item-list">
+                <!-- <li class="list-group-item" id="todo-0">
+                            <strong>Steak Dinner: </strong> <em>1200 Calories</em>
+                            <span style="margin-left: 5rem"></span>
+                            <a href="#" class="">
+                                <i class="fa fa-pencil mr-3"></i>
+                            </a>
+                            <a href="#" class="">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </li> -->
+
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
