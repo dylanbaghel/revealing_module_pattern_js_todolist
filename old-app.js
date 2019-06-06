@@ -119,42 +119,10 @@ const UICtrl = (function () {
         addBtn: '.add-btn',
         todoTitleInput: '#todo-title',
         updateBtn: '.update-btn',
-        clearBtn: '.clear-btn',
-        filterByName: '#filter-name'
+        clearBtn: '.clear-btn'
     };
     // Public Methods
     return {
-        generateNewTodoNode: function (newTodo) {
-            const li = document.createElement('li');
-            const strong = document.createElement('strong');
-            const div = document.createElement('div');
-            const editLink = document.createElement('a');
-            const removeLink = document.createElement('a');
-            // Strong Title
-            strong.textContent = newTodo.title;
-            li.classList.add('list-group-item');
-            // li.id = `todo-${newTodo.id}`;
-            li.dataset.id = newTodo.id;
-
-            // icons div
-            div.className = 'todo-icons';
-
-            // Edit Link
-            editLink.href = '#';
-            editLink.innerHTML = '<i class="edit-icon fa fa-pencil mr-3"></i>';
-
-            // Remove Link 
-            removeLink.href = '#';
-            removeLink.innerHTML = '<i class="remove-icon fa fa-trash"></i>';
-
-            div.appendChild(editLink);
-            div.appendChild(removeLink);
-
-            li.appendChild(strong);
-            li.appendChild(div);
-
-            return li;
-        },
         getSelectors: function () {
             return UISelectors;
         },
@@ -181,25 +149,50 @@ const UICtrl = (function () {
             document.querySelector(UISelectors.todoTitleInput).value = title;
         },
         populateTodosList: function (todos) {
-            document.querySelector(UISelectors.itemList).innerHTML = '';
+            let html = '';
+
             todos.forEach(function (todo) {
-                const li = UICtrl.generateNewTodoNode(todo);
-                document.querySelector(UISelectors.itemList).appendChild(li);
+                html += `
+                <li class="list-group-item" id="todo-${todo.id}">
+                <strong>${todo.title}</strong>
+                <span style="margin-left: 5rem"></span>
+                <div class="todo-icons">
+            <a href="#">
+                <i class="edit-icon fa fa-pencil mr-3"></i>
+            </a>
+            <a href="#">
+                <i class="remove-icon fa fa-trash"></i>
+            </a>
+            </div>
+            </li>
+                `;
             });
 
+            document.querySelector(UISelectors.itemList).innerHTML = html;
         },
         addNewTodoInList: function (newTodo) {
-            const li = UICtrl.generateNewTodoNode(newTodo);
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.id = `todo-${newTodo.id}`;
 
+            li.innerHTML = `
+            <strong>${newTodo.title}</strong>
+            <div class="todo-icons">
+            <a href="#">
+                <i class="edit-icon fa fa-pencil mr-3"></i>
+            </a>
+            <a href="#">
+                <i class="remove-icon fa fa-trash"></i>
+            </a>
+            </div>`;
             document.querySelector(UISelectors.itemList).appendChild(li);
         },
         removeTodoFromList: function (id) {
-            const liId = `[data-id="${id}"]`
+            const liId = `#todo-${id}`;
             document.querySelector(liId).remove();
         },
         updateTodoListItem: function (todo) {
-            // const liId = `#todo-${todo.id}`;
-            const liId = `[data-id="${todo.id}"]`
+            const liId = `#todo-${todo.id}`;
 
             document.querySelector(liId).innerHTML = `<strong>${todo.title}</strong>
             <div class="todo-icons">
@@ -237,17 +230,7 @@ const App = (function (TodoCtrl, StorageCtrl, UICtrl) {
         });
 
         document.querySelector(UISelectors.updateBtn).addEventListener('click', updateTodoSubmit);
-        document.querySelector(UISelectors.filterByName).addEventListener('keyup', filterTodosByName);
 
-    }
-
-    const filterTodosByName = function(e) {
-        const todos = TodoCtrl.getTodos();
-        const filteredTodos = todos.filter(function(todo) {
-            return todo.title.toLowerCase().includes(e.target.value.trim().toLowerCase());
-        });
-
-        UICtrl.populateTodosList(filteredTodos);
     }
 
     const todoAddSubmit = function (e) {
@@ -284,8 +267,12 @@ const App = (function (TodoCtrl, StorageCtrl, UICtrl) {
     const modifyTodos = function (e) {
         if (e.target.classList.contains('edit-icon')) {
             // Invoke The Edit State;
-            const liId = e.target.parentElement.parentElement.parentElement.dataset.id;
-            const todoToUpdate = TodoCtrl.getTodoById(parseInt(liId));
+            const liId = e.target.parentElement.parentElement.parentElement.id;
+
+            const liIdArr = liId.split('-');
+            const todoId = parseInt(liIdArr[1]);
+            const todoToUpdate = TodoCtrl.getTodoById(todoId);
+
             TodoCtrl.setCurrentTodo(todoToUpdate);
 
             UICtrl.showEditState();
@@ -293,11 +280,15 @@ const App = (function (TodoCtrl, StorageCtrl, UICtrl) {
         }
 
         if (e.target.classList.contains('remove-icon')) {
-            let liId = e.target.parentElement.parentElement.parentElement.dataset.id;
-            liId = parseInt(liId);
-            TodoCtrl.deleteTodo(liId);
-            StorageCtrl.removeTodo(liId);
-            UICtrl.removeTodoFromList(liId);
+            const liId = e.target.parentElement.parentElement.parentElement.id;
+
+            const liIdArr = liId.split('-');
+
+            const todoId = parseInt(liIdArr[1]);
+
+            TodoCtrl.deleteTodo(todoId);
+            StorageCtrl.removeTodo(todoId);
+            UICtrl.removeTodoFromList(todoId);
         }
     }
 
